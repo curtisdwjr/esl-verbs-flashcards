@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💬 ESL Verb Flashcards</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #2d5016;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 25px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .progress {
+            color: #666;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+        
+        /* Flashcard */
+        .flashcard {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            padding: 40px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .verb-emoji {
+            font-size: 5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .verb-name {
+            font-size: 2.5rem;
+            font-weight: 500;
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .tense-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            border-left: 8px solid #ff9500;
+        }
+        
+        .tense-section:nth-child(3) {
+            border-left-color: #007aff;
+        }
+        
+        .tense-section:nth-child(4) {
+            border-left-color: #34c759;
+        }
+        
+        .tense-section:nth-child(5) {
+            border-left-color: #9f7aea;
+        }
+        
+        .tense-label {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #667eea;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .tense-content {
+            font-size: 1.3rem;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .example {
+            font-size: 1rem;
+            color: #666;
+            font-style: italic;
+            margin-top: 6px;
+        }
+        
+        /* Navigation */
+        .navigation {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 18px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .btn-prev {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .btn-prev:hover {
+            background: #d0d0d0;
+        }
+        
+        .btn-prev:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-next {
+            background: #9b4f5a;
+            color: white;
+        }
+        
+        .btn-next:hover {
+            background: #8a4650;
+        }
+        
+        .btn-next:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-random {
+            background: #c4a57b;
+            color: white;
+        }
+        
+        .btn-random:hover {
+            background: #b89968;
+        }
+        
+        /* Verb List Toggle */
+        .verb-list-toggle {
+            width: 100%;
+            padding: 15px;
+            background: #f5f5f5;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .verb-list {
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .verb-list.show {
+            display: block;
+        }
+        
+        .verb-list-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .verb-list-item:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .verb-list-emoji {
+            font-size: 1.5rem;
+        }
+        
+        .verb-list-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .verb-emoji {
+                font-size: 4rem;
+            }
+            
+            .verb-name {
+                font-size: 2rem;
+            }
+            
+            .tense-content {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💬 ESL Verb Flashcards</h1>
+            <p class="progress" id="progress">Verb 1 of 100</p>
+        </div>
+        
+        <button class="verb-list-toggle" onclick="toggleVerbList()">📋 View All Verbs</button>
+        
+        <div class="verb-list" id="verbList"></div>
+        
+        <div class="flashcard" id="flashcard">
+            <!-- Verb content will be inserted here -->
+        </div>
+        
+        <div class="navigation">
+            <button class="btn-prev" onclick="previousVerb()">⬅️ Previous</button>
+            <button class="btn-random" onclick="randomVerb()">🔀 Random</button>
+            <button class="btn-next" onclick="nextVerb()">Next ➡️</button>
+        </div>
+    </div>
+    
+    <script>
+        const verbs = [
+            { verb: "walk", emoji: "🚶", present: "walk / walks", progressive: "am/is/are walking", past: "walked", future: "will walk", 
+              examplePresent: "I walk to school every day.", exampleProgressive: "She is walking to the park.", examplePast: "They walked home yesterday.", exampleFuture: "We will walk together tomorrow." },
+            { verb: "eat", emoji: "🍽️", present: "eat / eats", progressive: "am/is/are eating", past: "ate", future: "will eat",
+              examplePresent: "He eats breakfast at 7 AM.", exampleProgressive: "We are eating lunch now.", examplePast: "She ate dinner early.", exampleFuture: "I will eat at the restaurant." },
+            { verb: "drink", emoji: "🥤", present: "drink / drinks", progressive: "am/is/are drinking", past: "drank", future: "will drink",
+              examplePresent: "I drink coffee every morning.", exampleProgressive: "He is drinking water.", examplePast: "They drank tea yesterday.", exampleFuture: "She will drink juice later." },
+            { verb: "sleep", emoji: "😴", present: "sleep / sleeps", progressive: "am/is/are sleeping", past: "slept", future: "will sleep",
+              examplePresent: "She sleeps eight hours.", exampleProgressive: "The baby is sleeping.", examplePast: "We slept well last night.", exampleFuture: "I will sleep early tonight." },
+            { verb: "run", emoji: "🏃", present: "run / runs", progressive: "am/is/are running", past: "ran", future: "will run",
+              examplePresent: "He runs every morning.", exampleProgressive: "They are running in the park.", examplePast: "She ran five miles.", exampleFuture: "I will run tomorrow." },
+            { verb: "read", emoji: "📖", present: "read / reads", progressive: "am/is/are reading", past: "read", future: "will read",
+              examplePresent: "I read books every week.", exampleProgressive: "She is reading a novel.", examplePast: "He read the newspaper.", exampleFuture: "We will read together." },
+            { verb: "write", emoji: "✍️", present: "write / writes", progressive: "am/is/are writing", past: "wrote", future: "will write",
+              examplePresent: "She writes emails daily.", exampleProgressive: "I am writing a letter.", examplePast: "They wrote a story.", exampleFuture: "He will write a book." },
+            { verb: "speak", emoji: "🗣️", present: "speak / speaks", progressive: "am/is/are speaking", past: "spoke", future: "will speak",
+              examplePresent: "He speaks three languages.", exampleProgressive: "She is speaking to her mom.", examplePast: "I spoke at the meeting.", exampleFuture: "They will speak tomorrow." },
+            { verb: "listen", emoji: "👂", present: "listen / listens", progressive: "am/is/are listening", past: "listened", future: "will listen",
+              examplePresent: "I listen to music daily.", exampleProgressive: "He is listening to the radio.", examplePast: "We listened carefully.", exampleFuture: "She will listen to you." },
+            { verb: "watch", emoji: "📺", present: "watch / watches", progressive: "am/is/are watching", past: "watched", future: "will watch",
+              examplePresent: "They watch TV at night.", exampleProgressive: "I am watching a movie.", examplePast: "She watched the game.", exampleFuture: "We will watch later." },
+            { verb: "cook", emoji: "🍳", present: "cook / cooks", progressive: "am/is/are cooking", past: "cooked", future: "will cook",
+              examplePresent: "She cooks dinner every day.", exampleProgressive: "He is cooking pasta.", examplePast: "I cooked breakfast.", exampleFuture: "They will cook tomorrow." },
+            { verb: "clean", emoji: "🧹", present: "clean / cleans", progressive: "am/is/are cleaning", past: "cleaned", future: "will clean",
+              examplePresent: "I clean my room weekly.", exampleProgressive: "She is cleaning the kitchen.", examplePast: "We cleaned the house.", exampleFuture: "He will clean later." },
+            { verb: "drive", emoji: "🚗", present: "drive / drives", progressive: "am/is/are driving", past: "drove", future: "will drive",
+              examplePresent: "He drives to work.", exampleProgressive: "I am driving home.", examplePast: "She drove carefully.", exampleFuture: "We will drive tomorrow." },
+            { verb: "work", emoji: "💼", present: "work / works", progressive: "am/is/are working", past: "worked", future: "will work",
+              examplePresent: "She works in an office.", exampleProgressive: "He is working hard.", examplePast: "They worked late.", exampleFuture: "I will work tomorrow." },
+            { verb: "study", emoji: "📚", present: "study / studies", progressive: "am/is/are studying", past: "studied", future: "will study",
+              examplePresent: "I study English daily.", exampleProgressive: "She is studying math.", examplePast: "We studied together.", exampleFuture: "He will study tonight." },
+            { verb: "teach", emoji: "👨‍🏫", present: "teach / teaches", progressive: "am/is/are teaching", past: "taught", future: "will teach",
+              examplePresent: "She teaches English.", exampleProgressive: "He is teaching a class.", examplePast: "I taught yesterday.", exampleFuture: "They will teach next week." },
+            { verb: "learn", emoji: "🎓", present: "learn / learns", progressive: "am/is/are learning", past: "learned", future: "will learn",
+              examplePresent: "I learn new words daily.", exampleProgressive: "She is learning Spanish.", examplePast: "We learned a lot.", exampleFuture: "He will learn soon." },
+            { verb: "buy", emoji: "🛒", present: "buy / buys", progressive: "am/is/are buying", past: "bought", future: "will buy",
+              examplePresent: "She buys groceries weekly.", exampleProgressive: "I am buying a car.", examplePast: "He bought a house.", exampleFuture: "We will buy tickets." },
+            { verb: "sell", emoji: "💰", present: "sell / sells", progressive: "am/is/are selling", past: "sold", future: "will sell",
+              examplePresent: "They sell furniture.", exampleProgressive: "He is selling his bike.", examplePast: "She sold her car.", exampleFuture: "I will sell it tomorrow." },
+            { verb: "open", emoji: "🚪", present: "open / opens", progressive: "am/is/are opening", past: "opened", future: "will open",
+              examplePresent: "The store opens at 9 AM.", exampleProgressive: "She is opening the door.", examplePast: "I opened the window.", exampleFuture: "He will open it." },
+            { verb: "close", emoji: "🔒", present: "close / closes", progressive: "am/is/are closing", past: "closed", future: "will close",
+              examplePresent: "The bank closes at 5 PM.", exampleProgressive: "I am closing the store.", examplePast: "She closed the door.", exampleFuture: "We will close early." },
+            { verb: "start", emoji: "▶️", present: "start / starts", progressive: "am/is/are starting", past: "started", future: "will start",
+              examplePresent: "Class starts at 8 AM.", exampleProgressive: "We are starting now.", examplePast: "He started yesterday.", exampleFuture: "I will start tomorrow." },
+            { verb: "stop", emoji: "⏹️", present: "stop / stops", progressive: "am/is/are stopping", past: "stopped", future: "will stop",
+              examplePresent: "The bus stops here.", exampleProgressive: "She is stopping the car.", examplePast: "I stopped working.", exampleFuture: "He will stop soon." },
+            { verb: "sit", emoji: "🪑", present: "sit / sits", progressive: "am/is/are sitting", past: "sat", future: "will sit",
+              examplePresent: "I sit at my desk.", exampleProgressive: "She is sitting down.", examplePast: "We sat together.", exampleFuture: "He will sit here." },
+            { verb: "stand", emoji: "🧍", present: "stand / stands", progressive: "am/is/are standing", past: "stood", future: "will stand",
+              examplePresent: "She stands by the door.", exampleProgressive: "I am standing in line.", examplePast: "They stood up.", exampleFuture: "We will stand together." },
+            { verb: "go", emoji: "➡️", present: "go / goes", progressive: "am/is/are going", past: "went", future: "will go",
+              examplePresent: "I go to work daily.", exampleProgressive: "She is going home.", examplePast: "We went shopping.", exampleFuture: "He will go tomorrow." },
+            { verb: "come", emoji: "👋", present: "come / comes", progressive: "am/is/are coming", past: "came", future: "will come",
+              examplePresent: "He comes every day.", exampleProgressive: "She is coming now.", examplePast: "They came yesterday.", exampleFuture: "I will come later." },
+            { verb: "give", emoji: "🎁", present: "give / gives", progressive: "am/is/are giving", past: "gave", future: "will give",
+              examplePresent: "She gives good advice.", exampleProgressive: "I am giving a gift.", examplePast: "He gave me a book.", exampleFuture: "We will give thanks." },
+            { verb: "take", emoji: "✋", present: "take / takes", progressive: "am/is/are taking", past: "took", future: "will take",
+              examplePresent: "I take the bus daily.", exampleProgressive: "She is taking a photo.", examplePast: "He took medicine.", exampleFuture: "We will take a break." },
+            { verb: "bring", emoji: "📦", present: "bring / brings", progressive: "am/is/are bringing", past: "brought", future: "will bring",
+              examplePresent: "She brings lunch.", exampleProgressive: "I am bringing my book.", examplePast: "He brought flowers.", exampleFuture: "They will bring food." },
+            { verb: "send", emoji: "📤", present: "send / sends", progressive: "am/is/are sending", past: "sent", future: "will send",
+              examplePresent: "I send emails daily.", exampleProgressive: "She is sending a message.", examplePast: "We sent a letter.", exampleFuture: "He will send it." },
+            { verb: "receive", emoji: "📥", present: "receive / receives", progressive: "am/is/are receiving", past: "received", future: "will receive",
+              examplePresent: "She receives mail daily.", exampleProgressive: "I am receiving a package.", examplePast: "He received a gift.", exampleFuture: "We will receive it." },
+            { verb: "call", emoji: "📞", present: "call / calls", progressive: "am/is/are calling", past: "called", future: "will call",
+              examplePresent: "I call my mom weekly.", exampleProgressive: "She is calling her friend.", examplePast: "He called yesterday.", exampleFuture: "I will call you." },
+            { verb: "answer", emoji: "💬", present: "answer / answers", progressive: "am/is/are answering", past: "answered", future: "will answer",
+              examplePresent: "She answers questions.", exampleProgressive: "I am answering now.", examplePast: "He answered correctly.", exampleFuture: "We will answer later." },
+            { verb: "ask", emoji: "❓", present: "ask / asks", progressive: "am/is/are asking", past: "asked", future: "will ask",
+              examplePresent: "I ask many questions.", exampleProgressive: "She is asking for help.", examplePast: "He asked a question.", exampleFuture: "They will ask tomorrow." },
+            { verb: "tell", emoji: "🗨️", present: "tell / tells", progressive: "am/is/are telling", past: "told", future: "will tell",
+              examplePresent: "She tells stories.", exampleProgressive: "I am telling the truth.", examplePast: "He told a joke.", exampleFuture: "We will tell you." },
+            { verb: "say", emoji: "💭", present: "say / says", progressive: "am/is/are saying", past: "said", future: "will say",
+              examplePresent: "He says hello.", exampleProgressive: "She is saying goodbye.", examplePast: "I said thank you.", exampleFuture: "They will say yes." },
+            { verb: "talk", emoji: "👥", present: "talk / talks", progressive: "am/is/are talking", past: "talked", future: "will talk",
+              examplePresent: "We talk every day.", exampleProgressive: "I am talking to my friend.", examplePast: "She talked for hours.", exampleFuture: "He will talk later." },
+            { verb: "meet", emoji: "🤝", present: "meet / meets", progressive: "am/is/are meeting", past: "met", future: "will meet",
+              examplePresent: "I meet clients weekly.", exampleProgressive: "She is meeting them now.", examplePast: "We met yesterday.", exampleFuture: "He will meet you." },
+            { verb: "visit", emoji: "🏠", present: "visit / visits", progressive: "am/is/are visiting", past: "visited", future: "will visit",
+              examplePresent: "She visits her parents.", exampleProgressive: "I am visiting my aunt.", examplePast: "We visited last week.", exampleFuture: "He will visit soon." },
+            { verb: "help", emoji: "🤲", present: "help / helps", progressive: "am/is/are helping", past: "helped", future: "will help",
+              examplePresent: "I help my neighbors.", exampleProgressive: "She is helping him.", examplePast: "He helped me yesterday.", exampleFuture: "We will help you." },
+            { verb: "need", emoji: "🆘", present: "need / needs", progressive: "am/is/are needing", past: "needed", future: "will need",
+              examplePresent: "I need water.", exampleProgressive: "She is needing help.", examplePast: "We needed time.", exampleFuture: "He will need it." },
+            { verb: "want", emoji: "🙏", present: "want / wants", progressive: "am/is/are wanting", past: "wanted", future: "will want",
+              examplePresent: "She wants coffee.", exampleProgressive: "I am wanting to go.", examplePast: "He wanted more.", exampleFuture: "They will want this." },
+            { verb: "like", emoji: "👍", present: "like / likes", progressive: "am/is/are liking", past: "liked", future: "will like",
+              examplePresent: "I like pizza.", exampleProgressive: "She is liking it.", examplePast: "We liked the movie.", exampleFuture: "He will like it." },
+            { verb: "love", emoji: "❤️", present: "love / loves", progressive: "am/is/are loving", past: "loved", future: "will love",
+              examplePresent: "She loves music.", exampleProgressive: "I am loving this.", examplePast: "He loved her.", exampleFuture: "We will love it." },
+            { verb: "hate", emoji: "😠", present: "hate / hates", progressive: "am/is/are hating", past: "hated", future: "will hate",
+              examplePresent: "I hate cold weather.", exampleProgressive: "She is hating this.", examplePast: "He hated waiting.", exampleFuture: "They will hate it." },
+            { verb: "know", emoji: "🧠", present: "know / knows", progressive: "am/is/are knowing", past: "knew", future: "will know",
+              examplePresent: "I know the answer.", exampleProgressive: "She is knowing more.", examplePast: "He knew her.", exampleFuture: "We will know soon." },
+            { verb: "think", emoji: "🤔", present: "think / thinks", progressive: "am/is/are thinking", past: "thought", future: "will think",
+              examplePresent: "I think it's true.", exampleProgressive: "She is thinking hard.", examplePast: "He thought carefully.", exampleFuture: "We will think about it." },
+            { verb: "understand", emoji: "💡", present: "understand / understands", progressive: "am/is/are understanding", past: "understood", future: "will understand",
+              examplePresent: "I understand English.", exampleProgressive: "She is understanding now.", examplePast: "He understood me.", exampleFuture: "We will understand." },
+            { verb: "remember", emoji: "💭", present: "remember / remembers", progressive: "am/is/are remembering", past: "remembered", future: "will remember",
+              examplePresent: "I remember his name.", exampleProgressive: "She is remembering.", examplePast: "He remembered it.", exampleFuture: "We will remember." },
+            { verb: "forget", emoji: "🤷", present: "forget / forgets", progressive: "am/is/are forgetting", past: "forgot", future: "will forget",
+              examplePresent: "I forget names easily.", exampleProgressive: "She is forgetting.", examplePast: "He forgot his keys.", exampleFuture: "We will forget." },
+            { verb: "see", emoji: "👀", present: "see / sees", progressive: "am/is/are seeing", past: "saw", future: "will see",
+              examplePresent: "I see a bird.", exampleProgressive: "She is seeing a doctor.", examplePast: "We saw a movie.", exampleFuture: "He will see you." },
+            { verb: "look", emoji: "🔍", present: "look / looks", progressive: "am/is/are looking", past: "looked", future: "will look",
+              examplePresent: "She looks beautiful.", exampleProgressive: "I am looking for my keys.", examplePast: "He looked tired.", exampleFuture: "We will look later." },
+            { verb: "find", emoji: "🔎", present: "find / finds", progressive: "am/is/are finding", past: "found", future: "will find",
+              examplePresent: "I find this interesting.", exampleProgressive: "She is finding answers.", examplePast: "He found his wallet.", exampleFuture: "We will find it." },
+            { verb: "lose", emoji: "😢", present: "lose / loses", progressive: "am/is/are losing", past: "lost", future: "will lose",
+              examplePresent: "I lose things often.", exampleProgressive: "She is losing weight.", examplePast: "He lost his phone.", exampleFuture: "We will lose time." },
+            { verb: "keep", emoji: "🔐", present: "keep / keeps", progressive: "am/is/are keeping", past: "kept", future: "will keep",
+              examplePresent: "I keep my keys here.", exampleProgressive: "She is keeping it.", examplePast: "He kept his promise.", exampleFuture: "We will keep it." },
+            { verb: "put", emoji: "📍", present: "put / puts", progressive: "am/is/are putting", past: "put", future: "will put",
+              examplePresent: "I put my bag here.", exampleProgressive: "She is putting it away.", examplePast: "He put it down.", exampleFuture: "We will put it there." },
+            { verb: "get", emoji: "🎯", present: "get / gets", progressive: "am/is/are getting", past: "got", future: "will get",
+              examplePresent: "I get up at 7 AM.", exampleProgressive: "She is getting better.", examplePast: "He got a gift.", exampleFuture: "We will get there." },
+            { verb: "make", emoji: "🔨", present: "make / makes", progressive: "am/is/are making", past: "made", future: "will make",
+              examplePresent: "I make breakfast daily.", exampleProgressive: "She is making dinner.", examplePast: "He made a mistake.", exampleFuture: "We will make time." },
+            { verb: "do", emoji: "✅", present: "do / does", progressive: "am/is/are doing", past: "did", future: "will do",
+              examplePresent: "I do my homework.", exampleProgressive: "She is doing her best.", examplePast: "He did it yesterday.", exampleFuture: "We will do it." },
+            { verb: "have", emoji: "✋", present: "have / has", progressive: "am/is/are having", past: "had", future: "will have",
+              examplePresent: "I have a car.", exampleProgressive: "She is having lunch.", examplePast: "He had a dog.", exampleFuture: "We will have fun." },
+            { verb: "use", emoji: "🛠️", present: "use / uses", progressive: "am/is/are using", past: "used", future: "will use",
+              examplePresent: "I use my phone daily.", exampleProgressive: "She is using the computer.", examplePast: "He used my pen.", exampleFuture: "We will use it." },
+            { verb: "try", emoji: "💪", present: "try / tries", progressive: "am/is/are trying", past: "tried", future: "will try",
+              examplePresent: "I try my best.", exampleProgressive: "She is trying hard.", examplePast: "He tried yesterday.", exampleFuture: "We will try again." },
+            { verb: "play", emoji: "🎮", present: "play / plays", progressive: "am/is/are playing", past: "played", future: "will play",
+              examplePresent: "I play soccer weekly.", exampleProgressive: "She is playing music.", examplePast: "He played guitar.", exampleFuture: "We will play tomorrow." },
+            { verb: "sing", emoji: "🎤", present: "sing / sings", progressive: "am/is/are singing", past: "sang", future: "will sing",
+              examplePresent: "She sings beautifully.", exampleProgressive: "I am singing a song.", examplePast: "He sang at the party.", exampleFuture: "We will sing together." },
+            { verb: "dance", emoji: "💃", present: "dance / dances", progressive: "am/is/are dancing", past: "danced", future: "will dance",
+              examplePresent: "She dances every week.", exampleProgressive: "I am dancing now.", examplePast: "He danced all night.", exampleFuture: "We will dance later." },
+            { verb: "swim", emoji: "🏊", present: "swim / swims", progressive: "am/is/are swimming", past: "swam", future: "will swim",
+              examplePresent: "I swim every summer.", exampleProgressive: "She is swimming now.", examplePast: "He swam yesterday.", exampleFuture: "We will swim tomorrow." },
+            { verb: "fly", emoji: "✈️", present: "fly / flies", progressive: "am/is/are flying", past: "flew", future: "will fly",
+              examplePresent: "Birds fly south.", exampleProgressive: "I am flying to Paris.", examplePast: "She flew last week.", exampleFuture: "He will fly tomorrow." },
+            { verb: "jump", emoji: "🦘", present: "jump / jumps", progressive: "am/is/are jumping", past: "jumped", future: "will jump",
+              examplePresent: "I jump rope daily.", exampleProgressive: "She is jumping high.", examplePast: "He jumped over it.", exampleFuture: "We will jump together." },
+            { verb: "climb", emoji: "🧗", present: "climb / climbs", progressive: "am/is/are climbing", past: "climbed", future: "will climb",
+              examplePresent: "She climbs mountains.", exampleProgressive: "I am climbing stairs.", examplePast: "He climbed the tree.", exampleFuture: "We will climb tomorrow." },
+            { verb: "throw", emoji: "⚾", present: "throw / throws", progressive: "am/is/are throwing", past: "threw", future: "will throw",
+              examplePresent: "I throw the ball.", exampleProgressive: "She is throwing it.", examplePast: "He threw it far.", exampleFuture: "We will throw together." },
+            { verb: "catch", emoji: "🤾", present: "catch / catches", progressive: "am/is/are catching", past: "caught", future: "will catch",
+              examplePresent: "She catches easily.", exampleProgressive: "I am catching the ball.", examplePast: "He caught it.", exampleFuture: "We will catch it." },
+            { verb: "push", emoji: "👐", present: "push / pushes", progressive: "am/is/are pushing", past: "pushed", future: "will push",
+              examplePresent: "I push the door.", exampleProgressive: "She is pushing the cart.", examplePast: "He pushed it open.", exampleFuture: "We will push harder." },
+            { verb: "pull", emoji: "🪢", present: "pull / pulls", progressive: "am/is/are pulling", past: "pulled", future: "will pull",
+              examplePresent: "She pulls the rope.", exampleProgressive: "I am pulling it.", examplePast: "He pulled the door.", exampleFuture: "We will pull together." },
+            { verb: "carry", emoji: "🎒", present: "carry / carries", progressive: "am/is/are carrying", past: "carried", future: "will carry",
+              examplePresent: "I carry my bag.", exampleProgressive: "She is carrying it.", examplePast: "He carried the box.", exampleFuture: "We will carry it." },
+            { verb: "hold", emoji: "✊", present: "hold / holds", progressive: "am/is/are holding", past: "held", future: "will hold",
+              examplePresent: "I hold the baby.", exampleProgressive: "She is holding it.", examplePast: "He held my hand.", exampleFuture: "We will hold on." },
+            { verb: "break", emoji: "💥", present: "break / breaks", progressive: "am/is/are breaking", past: "broke", future: "will break",
+              examplePresent: "I break eggs.", exampleProgressive: "She is breaking it.", examplePast: "He broke the glass.", exampleFuture: "We will break it." },
+            { verb: "fix", emoji: "🔧", present: "fix / fixes", progressive: "am/is/are fixing", past: "fixed", future: "will fix",
+              examplePresent: "I fix cars.", exampleProgressive: "She is fixing it.", examplePast: "He fixed the problem.", exampleFuture: "We will fix it." },
+            { verb: "build", emoji: "🏗️", present: "build / builds", progressive: "am/is/are building", past: "built", future: "will build",
+              examplePresent: "They build houses.", exampleProgressive: "I am building a tower.", examplePast: "She built a bridge.", exampleFuture: "We will build it." },
+            { verb: "draw", emoji: "🎨", present: "draw / draws", progressive: "am/is/are drawing", past: "drew", future: "will draw",
+              examplePresent: "She draws beautifully.", exampleProgressive: "I am drawing a picture.", examplePast: "He drew a cat.", exampleFuture: "We will draw later." },
+            { verb: "paint", emoji: "🖌️", present: "paint / paints", progressive: "am/is/are painting", past: "painted", future: "will paint",
+              examplePresent: "I paint on weekends.", exampleProgressive: "She is painting the wall.", examplePast: "He painted yesterday.", exampleFuture: "We will paint tomorrow." },
+            { verb: "cut", emoji: "✂️", present: "cut / cuts", progressive: "am/is/are cutting", past: "cut", future: "will cut",
+              examplePresent: "I cut paper.", exampleProgressive: "She is cutting vegetables.", examplePast: "He cut his hair.", exampleFuture: "We will cut it." },
+            { verb: "wash", emoji: "🧼", present: "wash / washes", progressive: "am/is/are washing", past: "washed", future: "will wash",
+              examplePresent: "I wash dishes daily.", exampleProgressive: "She is washing her car.", examplePast: "He washed his hands.", exampleFuture: "We will wash later." },
+            { verb: "dry", emoji: "💨", present: "dry / dries", progressive: "am/is/are drying", past: "dried", future: "will dry",
+              examplePresent: "I dry the dishes.", exampleProgressive: "She is drying her hair.", examplePast: "He dried it quickly.", exampleFuture: "We will dry it." },
+            { verb: "wear", emoji: "👕", present: "wear / wears", progressive: "am/is/are wearing", past: "wore", future: "will wear",
+              examplePresent: "I wear glasses.", exampleProgressive: "She is wearing a dress.", examplePast: "He wore a suit.", exampleFuture: "We will wear uniforms." },
+            { verb: "change", emoji: "🔄", present: "change / changes", progressive: "am/is/are changing", past: "changed", future: "will change",
+              examplePresent: "I change clothes daily.", exampleProgressive: "She is changing her mind.", examplePast: "He changed jobs.", exampleFuture: "We will change it." },
+            { verb: "turn", emoji: "↪️", present: "turn / turns", progressive: "am/is/are turning", past: "turned", future: "will turn",
+              examplePresent: "I turn left here.", exampleProgressive: "She is turning around.", examplePast: "He turned the page.", exampleFuture: "We will turn right." },
+            { verb: "move", emoji: "📦", present: "move / moves", progressive: "am/is/are moving", past: "moved", future: "will move",
+              examplePresent: "I move quickly.", exampleProgressive: "She is moving to Boston.", examplePast: "He moved yesterday.", exampleFuture: "We will move soon." },
+            { verb: "wait", emoji: "⏰", present: "wait / waits", progressive: "am/is/are waiting", past: "waited", future: "will wait",
+              examplePresent: "I wait for the bus.", exampleProgressive: "She is waiting now.", examplePast: "He waited an hour.", exampleFuture: "We will wait here." },
+            { verb: "arrive", emoji: "🏁", present: "arrive / arrives", progressive: "am/is/are arriving", past: "arrived", future: "will arrive",
+              examplePresent: "I arrive at 9 AM.", exampleProgressive: "She is arriving soon.", examplePast: "He arrived late.", exampleFuture: "We will arrive tomorrow." },
+            { verb: "leave", emoji: "🚶‍♂️", present: "leave / leaves", progressive: "am/is/are leaving", past: "left", future: "will leave",
+              examplePresent: "I leave at 5 PM.", exampleProgressive: "She is leaving now.", examplePast: "He left yesterday.", exampleFuture: "We will leave early." },
+            { verb: "return", emoji: "🔙", present: "return / returns", progressive: "am/is/are returning", past: "returned", future: "will return",
+              examplePresent: "I return home daily.", exampleProgressive: "She is returning it.", examplePast: "He returned the book.", exampleFuture: "We will return soon." },
+            { verb: "stay", emoji: "🏡", present: "stay / stays", progressive: "am/is/are staying", past: "stayed", future: "will stay",
+              examplePresent: "I stay home weekends.", exampleProgressive: "She is staying with us.", examplePast: "He stayed overnight.", exampleFuture: "We will stay here." },
+            { verb: "live", emoji: "🌆", present: "live / lives", progressive: "am/is/are living", past: "lived", future: "will live",
+              examplePresent: "I live in Boston.", exampleProgressive: "She is living downtown.", examplePast: "He lived in Paris.", exampleFuture: "We will live together." },
+            { verb: "die", emoji: "⚰️", present: "die / dies", progressive: "am/is/are dying", past: "died", future: "will die",
+              examplePresent: "Plants die without water.", exampleProgressive: "It is dying.", examplePast: "The tree died.", exampleFuture: "We will die someday." },
+            { verb: "grow", emoji: "🌱", present: "grow / grows", progressive: "am/is/are growing", past: "grew", future: "will grow",
+              examplePresent: "I grow vegetables.", exampleProgressive: "She is growing taller.", examplePast: "He grew up here.", exampleFuture: "We will grow more." },
+            { verb: "happen", emoji: "💫", present: "happen / happens", progressive: "am/is/are happening", past: "happened", future: "will happen",
+              examplePresent: "Things happen.", exampleProgressive: "It is happening now.", examplePast: "It happened yesterday.", exampleFuture: "It will happen soon." },
+            { verb: "become", emoji: "🦋", present: "become / becomes", progressive: "am/is/are becoming", past: "became", future: "will become",
+              examplePresent: "I become tired.", exampleProgressive: "She is becoming a doctor.", examplePast: "He became famous.", exampleFuture: "We will become friends." },
+            { verb: "feel", emoji: "😊", present: "feel / feels", progressive: "am/is/are feeling", past: "felt", future: "will feel",
+              examplePresent: "I feel happy.", exampleProgressive: "She is feeling better.", examplePast: "He felt sick.", exampleFuture: "We will feel great." },
+            { verb: "believe", emoji: "🙌", present: "believe / believes", progressive: "am/is/are believing", past: "believed", future: "will believe",
+              examplePresent: "I believe you.", exampleProgressive: "She is believing it.", examplePast: "He believed her.", exampleFuture: "We will believe it." },
+            { verb: "hope", emoji: "🌟", present: "hope / hopes", progressive: "am/is/are hoping", past: "hoped", future: "will hope",
+              examplePresent: "I hope so.", exampleProgressive: "She is hoping for rain.", examplePast: "He hoped to win.", exampleFuture: "We will hope for the best." },
+            { verb: "wish", emoji: "⭐", present: "wish / wishes", progressive: "am/is/are wishing", past: "wished", future: "will wish",
+              examplePresent: "I wish for peace.", exampleProgressive: "She is wishing hard.", examplePast: "He wished me luck.", exampleFuture: "We will wish you well." },
+            { verb: "plan", emoji: "📝", present: "plan / plans", progressive: "am/is/are planning", past: "planned", future: "will plan",
+              examplePresent: "I plan my day.", exampleProgressive: "She is planning a party.", examplePast: "He planned it well.", exampleFuture: "We will plan together." },
+            { verb: "choose", emoji: "🤷‍♀️", present: "choose / chooses", progressive: "am/is/are choosing", past: "chose", future: "will choose",
+              examplePresent: "I choose carefully.", exampleProgressive: "She is choosing now.", examplePast: "He chose the red one.", exampleFuture: "We will choose later." }
+        ];
+        
+        let currentIndex = 0;
+        let studiedVerbs = new Set();
+        
+        function displayVerb(index) {
+            const verb = verbs[index];
+            const flashcard = document.getElementById('flashcard');
+            
+            flashcard.innerHTML = `
+                <div class="verb-emoji">${verb.emoji}</div>
+                <div class="verb-name">${verb.verb}</div>
+                
+                <div class="tense-section">
+                    <div class="tense-label">Simple Present</div>
+                    <div class="tense-content">${verb.present}</div>
+                    <div class="example">"${verb.examplePresent}"</div>
+                </div>
+                
+                <div class="tense-section">
+                    <div class="tense-label">Present Progressive</div>
+                    <div class="tense-content">${verb.progressive}</div>
+                    <div class="example">"${verb.exampleProgressive}"</div>
+                </div>
+                
+                <div class="tense-section">
+                    <div class="tense-label">Simple Past</div>
+                    <div class="tense-content">${verb.past}</div>
+                    <div class="example">"${verb.examplePast}"</div>
+                </div>
+                
+                <div class="tense-section">
+                    <div class="tense-label">Simple Future</div>
+                    <div class="tense-content">${verb.future}</div>
+                    <div class="example">"${verb.exampleFuture}"</div>
+                </div>
+            `;
+            
+            studiedVerbs.add(index);
+            updateProgress();
+        }
+        
+        function updateProgress() {
+            document.getElementById('progress').textContent = 
+                `Verb ${currentIndex + 1} of ${verbs.length} • Studied: ${studiedVerbs.size}`;
+        }
+        
+        function nextVerb() {
+            currentIndex = (currentIndex + 1) % verbs.length;
+            displayVerb(currentIndex);
+        }
+        
+        function previousVerb() {
+            currentIndex = (currentIndex - 1 + verbs.length) % verbs.length;
+            displayVerb(currentIndex);
+        }
+        
+        function randomVerb() {
+            currentIndex = Math.floor(Math.random() * verbs.length);
+            displayVerb(currentIndex);
+        }
+        
+        function toggleVerbList() {
+            const list = document.getElementById('verbList');
+            list.classList.toggle('show');
+            
+            if (list.classList.contains('show') && list.innerHTML === '') {
+                displayVerbList();
+            }
+        }
+        
+        function displayVerbList() {
+            const list = document.getElementById('verbList');
+            list.innerHTML = verbs.map((verb, index) => `
+                <div class="verb-list-item" onclick="goToVerb(${index})">
+                    <span class="verb-list-emoji">${verb.emoji}</span>
+                    <span class="verb-list-name">${verb.verb}</span>
+                </div>
+            `).join('');
+        }
+        
+        function goToVerb(index) {
+            currentIndex = index;
+            displayVerb(currentIndex);
+            document.getElementById('verbList').classList.remove('show');
+        }
+        
+        window.onload = () => displayVerb(0);
+    </script>
+</body>
+</html>
