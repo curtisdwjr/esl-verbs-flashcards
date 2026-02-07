@@ -377,7 +377,7 @@
     <div class="container">
         <div class="header">
             <h1>💬 English Verb Study Cards</h1>
-            <p class="progress" id="progress">Verb 1 of 100</p>
+            <p class="progress" id="progress">Verb 1 of 102</p>
         </div>
         
         <div class="flashcard">
@@ -387,8 +387,8 @@
                     <div class="verb-name" id="verbTitle">WALK</div>
                     <button class="speaker-btn" onclick="speakVerb()" title="Hear pronunciation">🔊</button>
                 </div>
-                <div class="verb-spanish" id="verbSpanish">caminar</div>
             </div>
+            <div class="verb-spanish" id="verbSpanish">caminar</div>
             
             <div class="tense-section">
                 <div class="tense-label">Simple Present</div>
@@ -470,7 +470,7 @@
               examplePresent: "I read books every week.", exampleProgressive: "I am reading a novel.", examplePast: "I read the newspaper.", exampleFuture: "I will read together." },
             { verb: "write", emoji: "✍️", spanish: "escribir", present: "I write", progressive: "I am writing", past: "I wrote", future: "I will write",
               examplePresent: "I write emails daily.", exampleProgressive: "I am writing a letter.", examplePast: "I wrote a story.", exampleFuture: "I will write a book." },
-            { verb: "speak", emoji: "🗣️", spanish: "hablar", spanish: "hablar", present: "I speak", progressive: "I am speaking", past: "I spoke", future: "I will speak",
+            { verb: "speak", emoji: "🗣️", spanish: "hablar", present: "I speak", progressive: "I am speaking", past: "I spoke", future: "I will speak",
               examplePresent: "I speak three languages.", exampleProgressive: "I am speaking to my mom.", examplePast: "I spoke at the meeting.", exampleFuture: "I will speak tomorrow." },
             { verb: "listen", emoji: "👂", spanish: "escuchar", present: "I listen", progressive: "I am listening", past: "I listened", future: "I will listen",
               examplePresent: "I listen to music daily.", exampleProgressive: "I am listening to the radio.", examplePast: "I listened carefully.", exampleFuture: "I will listen to you." },
@@ -628,10 +628,10 @@
               examplePresent: "I stay home on Sundays.", exampleProgressive: "I am staying here.", examplePast: "I stayed late.", exampleFuture: "I will stay longer." },
             { verb: "live", emoji: "🏡", spanish: "vivir", present: "I live", progressive: "I am living", past: "I lived", future: "I will live",
               examplePresent: "I live in California.", exampleProgressive: "I am living here.", examplePast: "I lived in Texas.", exampleFuture: "I will live there." },
-            { verb: "invite", emoji: "💌", spanish: "invitar", present: "I invite", progressive: "I am inviting", past: "I invited", future: "I will invite",
-              examplePresent: "I invite friends over.", exampleProgressive: "I am inviting everyone.", examplePast: "I invited her to dinner.", exampleFuture: "I will invite you." },
             { verb: "grow", emoji: "🌱", spanish: "crecer", present: "I grow", progressive: "I am growing", past: "I grew", future: "I will grow",
               examplePresent: "I grow plants.", exampleProgressive: "I am growing taller.", examplePast: "I grew up here.", exampleFuture: "I will grow stronger." },
+            { verb: "invite", emoji: "💌", spanish: "invitar", present: "I invite", progressive: "I am inviting", past: "I invited", future: "I will invite",
+              examplePresent: "I invite friends over.", exampleProgressive: "I am inviting everyone.", examplePast: "I invited her to dinner.", exampleFuture: "I will invite you." },
             { verb: "explain", emoji: "💬", spanish: "explicar", present: "I explain", progressive: "I am explaining", past: "I explained", future: "I will explain",
               examplePresent: "I explain things clearly.", exampleProgressive: "I am explaining the lesson.", examplePast: "I explained it yesterday.", exampleFuture: "I will explain later." },
             { verb: "prepare", emoji: "👨‍🍳", spanish: "preparar", present: "I prepare", progressive: "I am preparing", past: "I prepared", future: "I will prepare",
@@ -781,11 +781,6 @@
             });
         }
         
-        // Initialize
-        window.onload = () => {
-            displayVerb(0);
-        };
-        
         // Recording functionality
         let mediaRecorder = null;
         let audioChunks = {};
@@ -844,6 +839,11 @@
                 };
             }
         }
+        
+        // Initialize
+        window.onload = () => {
+            displayVerb(0);
+        };
     </script>
 </body>
 </html>
