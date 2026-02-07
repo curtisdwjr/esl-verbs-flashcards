@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💬 ESL Verb Flashcards</title>
+    <title>💬 English Verb Study Cards</title>
     
     <style>
         * {
@@ -79,7 +79,7 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
         }
         
         .verb-name {
@@ -90,10 +90,19 @@
             letter-spacing: 2px;
         }
         
+        .verb-spanish {
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: #666;
+            text-align: center;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
         .speaker-btn {
             background: transparent;
             border: none;
-            font-size: 2rem;
+            font-size: 1.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
         }
@@ -147,6 +156,54 @@
             color: #555;
             font-style: italic;
             line-height: 1.4;
+        }
+        
+        .record-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            align-items: center;
+        }
+        
+        .record-btn, .play-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .record-btn:hover, .play-btn:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+        
+        .record-btn.recording {
+            background: #e53e3e;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .play-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+        
+        .recording-status {
+            font-size: 0.85rem;
+            color: #666;
+            font-style: normal;
         }
         
         /* Navigation */
@@ -319,7 +376,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>💬 ESL Verb Flashcards</h1>
+            <h1>💬 English Verb Study Cards</h1>
             <p class="progress" id="progress">Verb 1 of 100</p>
         </div>
         
@@ -330,12 +387,18 @@
                     <div class="verb-name" id="verbTitle">WALK</div>
                     <button class="speaker-btn" onclick="speakVerb()" title="Hear pronunciation">🔊</button>
                 </div>
+                <div class="verb-spanish" id="verbSpanish">caminar</div>
             </div>
             
             <div class="tense-section">
                 <div class="tense-label">Simple Present</div>
                 <div class="tense-text" id="simplePresent">I walk</div>
                 <div class="example-text" id="examplePresent">I walk to school every day.</div>
+                <div class="record-controls" id="recordControlsPresent" style="display: none;">
+                    <button class="record-btn" id="recordBtnPresent" onclick="toggleRecording('Present')">🎤 Record</button>
+                    <button class="play-btn" id="playBtnPresent" onclick="playRecording('Present')" disabled>▶️ Play</button>
+                    <span class="recording-status" id="statusPresent"></span>
+                </div>
             </div>
             
             <div class="tense-section">
@@ -348,12 +411,22 @@
                 <div class="tense-label">Simple Past</div>
                 <div class="tense-text" id="simplePast">I walked</div>
                 <div class="example-text" id="examplePast">I walked home yesterday.</div>
+                <div class="record-controls" id="recordControlsPast" style="display: none;">
+                    <button class="record-btn" id="recordBtnPast" onclick="toggleRecording('Past')">🎤 Record</button>
+                    <button class="play-btn" id="playBtnPast" onclick="playRecording('Past')" disabled>▶️ Play</button>
+                    <span class="recording-status" id="statusPast"></span>
+                </div>
             </div>
             
             <div class="tense-section">
                 <div class="tense-label">Simple Future</div>
                 <div class="tense-text" id="simpleFuture">I will walk</div>
                 <div class="example-text" id="exampleFuture">I will walk tomorrow.</div>
+                <div class="record-controls" id="recordControlsFuture" style="display: none;">
+                    <button class="record-btn" id="recordBtnFuture" onclick="toggleRecording('Future')">🎤 Record</button>
+                    <button class="play-btn" id="playBtnFuture" onclick="playRecording('Future')" disabled>▶️ Play</button>
+                    <span class="recording-status" id="statusFuture"></span>
+                </div>
             </div>
         </div>
         
@@ -379,210 +452,214 @@
     
     <script>
         const verbs = [
-            { verb: "be", emoji: "", present: "I am", progressive: "", past: "I was", future: "I will be", 
-              examplePresent: "I am a student.", exampleProgressive: "", examplePast: "I was happy yesterday.", exampleFuture: "I will be there tomorrow.", hideProgressive: true },
-            { verb: "have", emoji: "", present: "I have", progressive: "", past: "I had", future: "I will have",
-              examplePresent: "I have a car.", exampleProgressive: "", examplePast: "I had a good time.", exampleFuture: "I will have fun.", hideProgressive: true },
-            { verb: "walk", emoji: "🚶", present: "I walk", progressive: "I am walking", past: "I walked", future: "I will walk", 
+            { verb: "to be", emoji: "", spanish: "ser/estar", present: "I am", progressive: "", past: "I was", future: "I will be", 
+              examplePresent: "I am a student. / Soy estudiante.", exampleProgressive: "", examplePast: "I was happy yesterday. / Estuve feliz ayer.", exampleFuture: "I will be there tomorrow. / Estaré allí mañana.", hideProgressive: true },
+            { verb: "to have", emoji: "", spanish: "tener", present: "I have", progressive: "", past: "I had", future: "I will have",
+              examplePresent: "I have a car. / Tengo un carro.", exampleProgressive: "", examplePast: "I had a good time. / Pasé un buen rato.", exampleFuture: "I will have fun. / Me divertiré.", hideProgressive: true },
+            { verb: "walk", emoji: "🚶", spanish: "caminar", present: "I walk", progressive: "I am walking", past: "I walked", future: "I will walk", 
               examplePresent: "I walk to school every day.", exampleProgressive: "I am walking to the park.", examplePast: "I walked home yesterday.", exampleFuture: "I will walk tomorrow." },
-            { verb: "eat", emoji: "🍽️", present: "I eat", progressive: "I am eating", past: "I ate", future: "I will eat",
+            { verb: "eat", emoji: "🍽️", spanish: "comer", present: "I eat", progressive: "I am eating", past: "I ate", future: "I will eat",
               examplePresent: "I eat breakfast at 7 AM.", exampleProgressive: "I am eating lunch now.", examplePast: "I ate dinner early.", exampleFuture: "I will eat at the restaurant." },
-            { verb: "drink", emoji: "🥤", present: "I drink", progressive: "I am drinking", past: "I drank", future: "I will drink",
+            { verb: "drink", emoji: "🥤", spanish: "beber", present: "I drink", progressive: "I am drinking", past: "I drank", future: "I will drink",
               examplePresent: "I drink coffee every morning.", exampleProgressive: "I am drinking water.", examplePast: "I drank tea yesterday.", exampleFuture: "I will drink juice later." },
-            { verb: "sleep", emoji: "😴", present: "I sleep", progressive: "I am sleeping", past: "I slept", future: "I will sleep",
+            { verb: "sleep", emoji: "😴", spanish: "dormir", present: "I sleep", progressive: "I am sleeping", past: "I slept", future: "I will sleep",
               examplePresent: "I sleep eight hours.", exampleProgressive: "I am sleeping now.", examplePast: "I slept well last night.", exampleFuture: "I will sleep early tonight." },
-            { verb: "run", emoji: "🏃", present: "I run", progressive: "I am running", past: "I ran", future: "I will run",
+            { verb: "run", emoji: "🏃", spanish: "correr", present: "I run", progressive: "I am running", past: "I ran", future: "I will run",
               examplePresent: "I run every morning.", exampleProgressive: "I am running in the park.", examplePast: "I ran five miles.", exampleFuture: "I will run tomorrow." },
-            { verb: "read", emoji: "📖", present: "I read", progressive: "I am reading", past: "I read", future: "I will read",
+            { verb: "read", emoji: "📖", spanish: "leer", present: "I read", progressive: "I am reading", past: "I read", future: "I will read",
               examplePresent: "I read books every week.", exampleProgressive: "I am reading a novel.", examplePast: "I read the newspaper.", exampleFuture: "I will read together." },
-            { verb: "write", emoji: "✍️", present: "I write", progressive: "I am writing", past: "I wrote", future: "I will write",
+            { verb: "write", emoji: "✍️", spanish: "escribir", present: "I write", progressive: "I am writing", past: "I wrote", future: "I will write",
               examplePresent: "I write emails daily.", exampleProgressive: "I am writing a letter.", examplePast: "I wrote a story.", exampleFuture: "I will write a book." },
-            { verb: "speak", emoji: "🗣️", present: "I speak", progressive: "I am speaking", past: "I spoke", future: "I will speak",
+            { verb: "speak", emoji: "🗣️", spanish: "hablar", spanish: "hablar", present: "I speak", progressive: "I am speaking", past: "I spoke", future: "I will speak",
               examplePresent: "I speak three languages.", exampleProgressive: "I am speaking to my mom.", examplePast: "I spoke at the meeting.", exampleFuture: "I will speak tomorrow." },
-            { verb: "listen", emoji: "👂", present: "I listen", progressive: "I am listening", past: "I listened", future: "I will listen",
+            { verb: "listen", emoji: "👂", spanish: "escuchar", present: "I listen", progressive: "I am listening", past: "I listened", future: "I will listen",
               examplePresent: "I listen to music daily.", exampleProgressive: "I am listening to the radio.", examplePast: "I listened carefully.", exampleFuture: "I will listen to you." },
-            { verb: "watch", emoji: "📺", present: "I watch", progressive: "I am watching", past: "I watched", future: "I will watch",
+            { verb: "watch", emoji: "📺", spanish: "mirar", present: "I watch", progressive: "I am watching", past: "I watched", future: "I will watch",
               examplePresent: "I watch TV at night.", exampleProgressive: "I am watching a movie.", examplePast: "I watched the game.", exampleFuture: "I will watch later." },
-            { verb: "cook", emoji: "🍳", present: "I cook", progressive: "I am cooking", past: "I cooked", future: "I will cook",
+            { verb: "cook", emoji: "🍳", spanish: "cocinar", present: "I cook", progressive: "I am cooking", past: "I cooked", future: "I will cook",
               examplePresent: "I cook dinner every day.", exampleProgressive: "I am cooking pasta.", examplePast: "I cooked breakfast.", exampleFuture: "I will cook tomorrow." },
-            { verb: "clean", emoji: "🧹", present: "I clean", progressive: "I am cleaning", past: "I cleaned", future: "I will clean",
+            { verb: "clean", emoji: "🧹", spanish: "limpiar", present: "I clean", progressive: "I am cleaning", past: "I cleaned", future: "I will clean",
               examplePresent: "I clean my room weekly.", exampleProgressive: "I am cleaning the kitchen.", examplePast: "I cleaned the house.", exampleFuture: "I will clean later." },
-            { verb: "drive", emoji: "🚗", present: "I drive", progressive: "I am driving", past: "I drove", future: "I will drive",
+            { verb: "drive", emoji: "🚗", spanish: "conducir", present: "I drive", progressive: "I am driving", past: "I drove", future: "I will drive",
               examplePresent: "I drive to work.", exampleProgressive: "I am driving home.", examplePast: "I drove carefully.", exampleFuture: "I will drive tomorrow." },
-            { verb: "work", emoji: "💼", present: "I work", progressive: "I am working", past: "I worked", future: "I will work",
+            { verb: "work", emoji: "💼", spanish: "trabajar", present: "I work", progressive: "I am working", past: "I worked", future: "I will work",
               examplePresent: "I work in an office.", exampleProgressive: "I am working hard.", examplePast: "I worked late.", exampleFuture: "I will work tomorrow." },
-            { verb: "play", emoji: "⚽", present: "I play", progressive: "I am playing", past: "I played", future: "I will play",
+            { verb: "play", emoji: "⚽", spanish: "jugar", present: "I play", progressive: "I am playing", past: "I played", future: "I will play",
               examplePresent: "I play soccer every day.", exampleProgressive: "I am playing music.", examplePast: "I played guitar yesterday.", exampleFuture: "I will play tomorrow." },
-            { verb: "study", emoji: "📚", present: "I study", progressive: "I am studying", past: "I studied", future: "I will study",
+            { verb: "study", emoji: "📚", spanish: "estudiar", present: "I study", progressive: "I am studying", past: "I studied", future: "I will study",
               examplePresent: "I study English daily.", exampleProgressive: "I am studying math.", examplePast: "I studied yesterday.", exampleFuture: "I will study tonight." },
-            { verb: "teach", emoji: "👨‍🏫", present: "I teach", progressive: "I am teaching", past: "I taught", future: "I will teach",
+            { verb: "teach", emoji: "👨‍🏫", spanish: "enseñar", present: "I teach", progressive: "I am teaching", past: "I taught", future: "I will teach",
               examplePresent: "I teach English.", exampleProgressive: "I am teaching a class.", examplePast: "I taught yesterday.", exampleFuture: "I will teach next week." },
-            { verb: "learn", emoji: "🧠", present: "I learn", progressive: "I am learning", past: "I learned", future: "I will learn",
+            { verb: "learn", emoji: "🧠", spanish: "aprender", present: "I learn", progressive: "I am learning", past: "I learned", future: "I will learn",
               examplePresent: "I learn new words daily.", exampleProgressive: "I am learning English.", examplePast: "I learned a lot yesterday.", exampleFuture: "I will learn more." },
-            { verb: "help", emoji: "🤝", present: "I help", progressive: "I am helping", past: "I helped", future: "I will help",
+            { verb: "help", emoji: "🤝", spanish: "ayudar", present: "I help", progressive: "I am helping", past: "I helped", future: "I will help",
               examplePresent: "I help my friends.", exampleProgressive: "I am helping my mom.", examplePast: "I helped yesterday.", exampleFuture: "I will help you." },
-            { verb: "sing", emoji: "🎤", present: "I sing", progressive: "I am singing", past: "I sang", future: "I will sing",
+            { verb: "sing", emoji: "🎤", spanish: "cantar", present: "I sing", progressive: "I am singing", past: "I sang", future: "I will sing",
               examplePresent: "I sing in the shower.", exampleProgressive: "I am singing a song.", examplePast: "I sang at the party.", exampleFuture: "I will sing tomorrow." },
-            { verb: "dance", emoji: "💃", present: "I dance", progressive: "I am dancing", past: "I danced", future: "I will dance",
+            { verb: "dance", emoji: "💃", spanish: "bailar", present: "I dance", progressive: "I am dancing", past: "I danced", future: "I will dance",
               examplePresent: "I dance every week.", exampleProgressive: "I am dancing now.", examplePast: "I danced all night.", exampleFuture: "I will dance later." },
-            { verb: "swim", emoji: "🏊", present: "I swim", progressive: "I am swimming", past: "I swam", future: "I will swim",
+            { verb: "swim", emoji: "🏊", spanish: "nadar", present: "I swim", progressive: "I am swimming", past: "I swam", future: "I will swim",
               examplePresent: "I swim in summer.", exampleProgressive: "I am swimming now.", examplePast: "I swam yesterday.", exampleFuture: "I will swim tomorrow." },
-            { verb: "jump", emoji: "🦘", present: "I jump", progressive: "I am jumping", past: "I jumped", future: "I will jump",
+            { verb: "jump", emoji: "🦘", spanish: "saltar", present: "I jump", progressive: "I am jumping", past: "I jumped", future: "I will jump",
               examplePresent: "I jump rope daily.", exampleProgressive: "I am jumping now.", examplePast: "I jumped high.", exampleFuture: "I will jump tomorrow." },
-            { verb: "sit", emoji: "🪑", present: "I sit", progressive: "I am sitting", past: "I sat", future: "I will sit",
+            { verb: "sit", emoji: "🪑", spanish: "sentarse", present: "I sit", progressive: "I am sitting", past: "I sat", future: "I will sit",
               examplePresent: "I sit at my desk.", exampleProgressive: "I am sitting down.", examplePast: "I sat in the front row.", exampleFuture: "I will sit here." },
-            { verb: "stand", emoji: "🧍", present: "I stand", progressive: "I am standing", past: "I stood", future: "I will stand",
+            { verb: "stand", emoji: "🧍", spanish: "estar de pie", present: "I stand", progressive: "I am standing", past: "I stood", future: "I will stand",
               examplePresent: "I stand by the door.", exampleProgressive: "I am standing in line.", examplePast: "I stood up.", exampleFuture: "I will stand over there." },
-            { verb: "go", emoji: "🚶", present: "I go", progressive: "I am going", past: "I went", future: "I will go",
+            { verb: "go", emoji: "🚶", spanish: "ir", present: "I go", progressive: "I am going", past: "I went", future: "I will go",
               examplePresent: "I go to school every day.", exampleProgressive: "I am going home.", examplePast: "I went shopping yesterday.", exampleFuture: "I will go tomorrow." },
-            { verb: "come", emoji: "🚶‍♀️", present: "I come", progressive: "I am coming", past: "I came", future: "I will come",
-              examplePresent: "I come here often.", exampleProgressive: "I am coming now.", examplePast: "I came early yesterday.", exampleFuture: "I will come later." },
-            { verb: "buy", emoji: "🛒", present: "I buy", progressive: "I am buying", past: "I bought", future: "I will buy",
+            { verb: "buy", emoji: "🛒", spanish: "comprar", present: "I buy", progressive: "I am buying", past: "I bought", future: "I will buy",
               examplePresent: "I buy groceries weekly.", exampleProgressive: "I am buying a car.", examplePast: "I bought a house.", exampleFuture: "I will buy tickets." },
-            { verb: "sell", emoji: "💰", present: "I sell", progressive: "I am selling", past: "I sold", future: "I will sell",
+            { verb: "sell", emoji: "💰", spanish: "vender", present: "I sell", progressive: "I am selling", past: "I sold", future: "I will sell",
               examplePresent: "I sell fruit.", exampleProgressive: "I am selling my car.", examplePast: "I sold my bike.", exampleFuture: "I will sell it tomorrow." },
-            { verb: "give", emoji: "🎁", present: "I give", progressive: "I am giving", past: "I gave", future: "I will give",
+            { verb: "give", emoji: "🎁", spanish: "dar", present: "I give", progressive: "I am giving", past: "I gave", future: "I will give",
               examplePresent: "I give gifts.", exampleProgressive: "I am giving a presentation.", examplePast: "I gave her flowers.", exampleFuture: "I will give you time." },
-            { verb: "take", emoji: "✋", present: "I take", progressive: "I am taking", past: "I took", future: "I will take",
+            { verb: "take", emoji: "✋", spanish: "tomar", present: "I take", progressive: "I am taking", past: "I took", future: "I will take",
               examplePresent: "I take the bus daily.", exampleProgressive: "I am taking a photo.", examplePast: "I took medicine.", exampleFuture: "I will take a break." },
-            { verb: "make", emoji: "🔨", present: "I make", progressive: "I am making", past: "I made", future: "I will make",
+            { verb: "make", emoji: "🔨", spanish: "hacer", present: "I make", progressive: "I am making", past: "I made", future: "I will make",
               examplePresent: "I make breakfast every day.", exampleProgressive: "I am making dinner.", examplePast: "I made a mistake.", exampleFuture: "I will make time." },
-            { verb: "open", emoji: "🚪", present: "I open", progressive: "I am opening", past: "I opened", future: "I will open",
+            { verb: "open", emoji: "🚪", spanish: "abrir", present: "I open", progressive: "I am opening", past: "I opened", future: "I will open",
               examplePresent: "I open the door.", exampleProgressive: "I am opening the window.", examplePast: "I opened my bag.", exampleFuture: "I will open it." },
-            { verb: "close", emoji: "🚪", present: "I close", progressive: "I am closing", past: "I closed", future: "I will close",
+            { verb: "close", emoji: "🚪", spanish: "cerrar", present: "I close", progressive: "I am closing", past: "I closed", future: "I will close",
               examplePresent: "I close the store at 9 PM.", exampleProgressive: "I am closing the door.", examplePast: "I closed the window.", exampleFuture: "I will close early." },
-            { verb: "start", emoji: "▶️", present: "I start", progressive: "I am starting", past: "I started", future: "I will start",
+            { verb: "start", emoji: "▶️", spanish: "comenzar", present: "I start", progressive: "I am starting", past: "I started", future: "I will start",
               examplePresent: "I start work at 9 AM.", exampleProgressive: "I am starting now.", examplePast: "I started yesterday.", exampleFuture: "I will start tomorrow." },
-            { verb: "stop", emoji: "⏹️", present: "I stop", progressive: "I am stopping", past: "I stopped", future: "I will stop",
+            { verb: "stop", emoji: "⏹️", spanish: "parar", present: "I stop", progressive: "I am stopping", past: "I stopped", future: "I will stop",
               examplePresent: "I stop at red lights.", exampleProgressive: "I am stopping now.", examplePast: "I stopped working.", exampleFuture: "I will stop soon." },
-            { verb: "finish", emoji: "✅", present: "I finish", progressive: "I am finishing", past: "I finished", future: "I will finish",
+            { verb: "finish", emoji: "✅", spanish: "terminar", present: "I finish", progressive: "I am finishing", past: "I finished", future: "I will finish",
               examplePresent: "I finish work at 5 PM.", exampleProgressive: "I am finishing now.", examplePast: "I finished yesterday.", exampleFuture: "I will finish tomorrow." },
-            { verb: "begin", emoji: "🏁", present: "I begin", progressive: "I am beginning", past: "I began", future: "I will begin",
-              examplePresent: "I begin class at 9 AM.", exampleProgressive: "I am beginning now.", examplePast: "I began yesterday.", exampleFuture: "I will begin soon." },
-            { verb: "love", emoji: "❤️", present: "I love", progressive: "I am loving", past: "I loved", future: "I will love",
+            { verb: "love", emoji: "❤️", spanish: "amar", present: "I love", progressive: "I am loving", past: "I loved", future: "I will love",
               examplePresent: "I love music.", exampleProgressive: "I am loving this.", examplePast: "I loved that movie.", exampleFuture: "I will love it." },
-            { verb: "like", emoji: "👍", present: "I like", progressive: "I am liking", past: "I liked", future: "I will like",
+            { verb: "like", emoji: "👍", spanish: "gustar", present: "I like", progressive: "I am liking", past: "I liked", future: "I will like",
               examplePresent: "I like pizza.", exampleProgressive: "I am liking it.", examplePast: "I liked the movie.", exampleFuture: "I will like it." },
-            { verb: "want", emoji: "🙏", present: "I want", progressive: "I am wanting", past: "I wanted", future: "I will want",
+            { verb: "want", emoji: "🙏", spanish: "querer", present: "I want", progressive: "I am wanting", past: "I wanted", future: "I will want",
               examplePresent: "I want coffee.", exampleProgressive: "I am wanting to go.", examplePast: "I wanted more.", exampleFuture: "I will want this." },
-            { verb: "hope", emoji: "🤞", present: "I hope", progressive: "I am hoping", past: "I hoped", future: "I will hope",
+            { verb: "hope", emoji: "🤞", spanish: "esperar", present: "I hope", progressive: "I am hoping", past: "I hoped", future: "I will hope",
               examplePresent: "I hope so.", exampleProgressive: "I am hoping for rain.", examplePast: "I hoped to win.", exampleFuture: "I will hope for the best." },
-            { verb: "think", emoji: "💭", present: "I think", progressive: "I am thinking", past: "I thought", future: "I will think",
+            { verb: "think", emoji: "💭", spanish: "pensar", present: "I think", progressive: "I am thinking", past: "I thought", future: "I will think",
               examplePresent: "I think carefully.", exampleProgressive: "I am thinking hard.", examplePast: "I thought about it.", exampleFuture: "I will think it over." },
-            { verb: "know", emoji: "🧠", present: "I know", progressive: "I am knowing", past: "I knew", future: "I will know",
+            { verb: "know", emoji: "🧠", spanish: "saber", present: "I know", progressive: "I am knowing", past: "I knew", future: "I will know",
               examplePresent: "I know the answer.", exampleProgressive: "I am knowing more.", examplePast: "I knew her.", exampleFuture: "I will know soon." },
-            { verb: "understand", emoji: "💡", present: "I understand", progressive: "I am understanding", past: "I understood", future: "I will understand",
+            { verb: "understand", emoji: "💡", spanish: "entender", present: "I understand", progressive: "I am understanding", past: "I understood", future: "I will understand",
               examplePresent: "I understand English.", exampleProgressive: "I am understanding now.", examplePast: "I understood the lesson.", exampleFuture: "I will understand soon." },
-            { verb: "remember", emoji: "🧠", present: "I remember", progressive: "I am remembering", past: "I remembered", future: "I will remember",
+            { verb: "remember", emoji: "🧠", spanish: "recordar", present: "I remember", progressive: "I am remembering", past: "I remembered", future: "I will remember",
               examplePresent: "I remember names.", exampleProgressive: "I am remembering now.", examplePast: "I remembered it.", exampleFuture: "I will remember." },
-            { verb: "forget", emoji: "❓", present: "I forget", progressive: "I am forgetting", past: "I forgot", future: "I will forget",
+            { verb: "forget", emoji: "❓", spanish: "olvidar", present: "I forget", progressive: "I am forgetting", past: "I forgot", future: "I will forget",
               examplePresent: "I forget things.", exampleProgressive: "I am forgetting.", examplePast: "I forgot my keys.", exampleFuture: "I will forget." },
-            { verb: "believe", emoji: "🙏", present: "I believe", progressive: "I am believing", past: "I believed", future: "I will believe",
+            { verb: "believe", emoji: "🙏", spanish: "creer", present: "I believe", progressive: "I am believing", past: "I believed", future: "I will believe",
               examplePresent: "I believe you.", exampleProgressive: "I am believing it.", examplePast: "I believed her.", exampleFuture: "I will believe it." },
-            { verb: "feel", emoji: "😊", present: "I feel", progressive: "I am feeling", past: "I felt", future: "I will feel",
+            { verb: "feel", emoji: "😊", spanish: "sentir", present: "I feel", progressive: "I am feeling", past: "I felt", future: "I will feel",
               examplePresent: "I feel happy.", exampleProgressive: "I am feeling better.", examplePast: "I felt sick.", exampleFuture: "I will feel great." },
-            { verb: "see", emoji: "👁️", present: "I see", progressive: "I am seeing", past: "I saw", future: "I will see",
+            { verb: "see", emoji: "👁️", spanish: "ver", present: "I see", progressive: "I am seeing", past: "I saw", future: "I will see",
               examplePresent: "I see a bird.", exampleProgressive: "I am seeing a doctor.", examplePast: "I saw a movie.", exampleFuture: "I will see you." },
-            { verb: "hear", emoji: "👂", present: "I hear", progressive: "I am hearing", past: "I heard", future: "I will hear",
+            { verb: "hear", emoji: "👂", spanish: "oír", present: "I hear", progressive: "I am hearing", past: "I heard", future: "I will hear",
               examplePresent: "I hear music.", exampleProgressive: "I am hearing it.", examplePast: "I heard a noise.", exampleFuture: "I will hear you." },
-            { verb: "look", emoji: "👀", present: "I look", progressive: "I am looking", past: "I looked", future: "I will look",
+            { verb: "look", emoji: "👀", spanish: "mirar", present: "I look", progressive: "I am looking", past: "I looked", future: "I will look",
               examplePresent: "I look at the sky.", exampleProgressive: "I am looking for it.", examplePast: "I looked everywhere.", exampleFuture: "I will look tomorrow." },
-            { verb: "find", emoji: "🔍", present: "I find", progressive: "I am finding", past: "I found", future: "I will find",
+            { verb: "find", emoji: "🔍", spanish: "encontrar", present: "I find", progressive: "I am finding", past: "I found", future: "I will find",
               examplePresent: "I find this interesting.", exampleProgressive: "I am finding answers.", examplePast: "I found my keys.", exampleFuture: "I will find it." },
-            { verb: "lose", emoji: "❓", present: "I lose", progressive: "I am losing", past: "I lost", future: "I will lose",
+            { verb: "lose", emoji: "❓", spanish: "perder", present: "I lose", progressive: "I am losing", past: "I lost", future: "I will lose",
               examplePresent: "I lose things often.", exampleProgressive: "I am losing weight.", examplePast: "I lost my phone.", exampleFuture: "I will lose time." },
-            { verb: "win", emoji: "🏆", present: "I win", progressive: "I am winning", past: "I won", future: "I will win",
+            { verb: "win", emoji: "🏆", spanish: "ganar", present: "I win", progressive: "I am winning", past: "I won", future: "I will win",
               examplePresent: "I win games.", exampleProgressive: "I am winning now.", examplePast: "I won yesterday.", exampleFuture: "I will win tomorrow." },
-            { verb: "try", emoji: "💪", present: "I try", progressive: "I am trying", past: "I tried", future: "I will try",
+            { verb: "try", emoji: "💪", spanish: "intentar", present: "I try", progressive: "I am trying", past: "I tried", future: "I will try",
               examplePresent: "I try my best.", exampleProgressive: "I am trying hard.", examplePast: "I tried yesterday.", exampleFuture: "I will try again." },
-            { verb: "use", emoji: "🔧", present: "I use", progressive: "I am using", past: "I used", future: "I will use",
+            { verb: "use", emoji: "🔧", spanish: "usar", present: "I use", progressive: "I am using", past: "I used", future: "I will use",
               examplePresent: "I use my phone daily.", exampleProgressive: "I am using the computer.", examplePast: "I used it.", exampleFuture: "I will use it." },
-            { verb: "wait", emoji: "⏰", present: "I wait", progressive: "I am waiting", past: "I waited", future: "I will wait",
+            { verb: "wait", emoji: "⏰", spanish: "esperar", present: "I wait", progressive: "I am waiting", past: "I waited", future: "I will wait",
               examplePresent: "I wait for the bus.", exampleProgressive: "I am waiting now.", examplePast: "I waited an hour.", exampleFuture: "I will wait here." },
-            { verb: "call", emoji: "📞", present: "I call", progressive: "I am calling", past: "I called", future: "I will call",
+            { verb: "call", emoji: "📞", spanish: "llamar", present: "I call", progressive: "I am calling", past: "I called", future: "I will call",
               examplePresent: "I call my mom weekly.", exampleProgressive: "I am calling my friend.", examplePast: "I called yesterday.", exampleFuture: "I will call you." },
-            { verb: "ask", emoji: "❓", present: "I ask", progressive: "I am asking", past: "I asked", future: "I will ask",
+            { verb: "ask", emoji: "❓", spanish: "preguntar", present: "I ask", progressive: "I am asking", past: "I asked", future: "I will ask",
               examplePresent: "I ask questions.", exampleProgressive: "I am asking for help.", examplePast: "I asked yesterday.", exampleFuture: "I will ask tomorrow." },
-            { verb: "answer", emoji: "💬", present: "I answer", progressive: "I am answering", past: "I answered", future: "I will answer",
+            { verb: "answer", emoji: "💬", spanish: "responder", present: "I answer", progressive: "I am answering", past: "I answered", future: "I will answer",
               examplePresent: "I answer emails.", exampleProgressive: "I am answering now.", examplePast: "I answered correctly.", exampleFuture: "I will answer later." },
-            { verb: "talk", emoji: "🗨️", present: "I talk", progressive: "I am talking", past: "I talked", future: "I will talk",
+            { verb: "talk", emoji: "🗨️", spanish: "hablar", present: "I talk", progressive: "I am talking", past: "I talked", future: "I will talk",
               examplePresent: "I talk to my friends.", exampleProgressive: "I am talking on the phone.", examplePast: "I talked for hours.", exampleFuture: "I will talk to you later." },
-            { verb: "tell", emoji: "🗣️", present: "I tell", progressive: "I am telling", past: "I told", future: "I will tell",
+            { verb: "tell", emoji: "🗣️", spanish: "decir", present: "I tell", progressive: "I am telling", past: "I told", future: "I will tell",
               examplePresent: "I tell stories.", exampleProgressive: "I am telling the truth.", examplePast: "I told her yesterday.", exampleFuture: "I will tell you tomorrow." },
-            { verb: "say", emoji: "💬", present: "I say", progressive: "I am saying", past: "I said", future: "I will say",
+            { verb: "say", emoji: "💬", spanish: "decir", present: "I say", progressive: "I am saying", past: "I said", future: "I will say",
               examplePresent: "I say hello.", exampleProgressive: "I am saying goodbye.", examplePast: "I said yes.", exampleFuture: "I will say it." },
-            { verb: "show", emoji: "👉", present: "I show", progressive: "I am showing", past: "I showed", future: "I will show",
+            { verb: "show", emoji: "👉", spanish: "mostrar", present: "I show", progressive: "I am showing", past: "I showed", future: "I will show",
               examplePresent: "I show my work.", exampleProgressive: "I am showing it now.", examplePast: "I showed her yesterday.", exampleFuture: "I will show you tomorrow." },
-            { verb: "bring", emoji: "🎁", present: "I bring", progressive: "I am bringing", past: "I brought", future: "I will bring",
+            { verb: "bring", emoji: "🎁", spanish: "traer", present: "I bring", progressive: "I am bringing", past: "I brought", future: "I will bring",
               examplePresent: "I bring lunch.", exampleProgressive: "I am bringing it now.", examplePast: "I brought a gift.", exampleFuture: "I will bring food." },
-            { verb: "carry", emoji: "📦", present: "I carry", progressive: "I am carrying", past: "I carried", future: "I will carry",
+            { verb: "carry", emoji: "📦", spanish: "llevar", present: "I carry", progressive: "I am carrying", past: "I carried", future: "I will carry",
               examplePresent: "I carry my bag.", exampleProgressive: "I am carrying it.", examplePast: "I carried the box.", exampleFuture: "I will carry it." },
-            { verb: "push", emoji: "👐", present: "I push", progressive: "I am pushing", past: "I pushed", future: "I will push",
+            { verb: "push", emoji: "👐", spanish: "empujar", present: "I push", progressive: "I am pushing", past: "I pushed", future: "I will push",
               examplePresent: "I push the door.", exampleProgressive: "I am pushing the cart.", examplePast: "I pushed it open.", exampleFuture: "I will push harder." },
-            { verb: "pull", emoji: "🧲", present: "I pull", progressive: "I am pulling", past: "I pulled", future: "I will pull",
+            { verb: "pull", emoji: "🧲", spanish: "jalar", present: "I pull", progressive: "I am pulling", past: "I pulled", future: "I will pull",
               examplePresent: "I pull the rope.", exampleProgressive: "I am pulling it.", examplePast: "I pulled the door.", exampleFuture: "I will pull together." },
-            { verb: "throw", emoji: "🥎", present: "I throw", progressive: "I am throwing", past: "I threw", future: "I will throw",
+            { verb: "throw", emoji: "🥎", spanish: "lanzar", present: "I throw", progressive: "I am throwing", past: "I threw", future: "I will throw",
               examplePresent: "I throw the ball.", exampleProgressive: "I am throwing it.", examplePast: "I threw it far.", exampleFuture: "I will throw together." },
-            { verb: "catch", emoji: "🧤", present: "I catch", progressive: "I am catching", past: "I caught", future: "I will catch",
+            { verb: "catch", emoji: "🧤", spanish: "atrapar", present: "I catch", progressive: "I am catching", past: "I caught", future: "I will catch",
               examplePresent: "I catch easily.", exampleProgressive: "I am catching the ball.", examplePast: "I caught it.", exampleFuture: "I will catch it." },
-            { verb: "hold", emoji: "🤲", present: "I hold", progressive: "I am holding", past: "I held", future: "I will hold",
+            { verb: "hold", emoji: "🤲", spanish: "sostener", present: "I hold", progressive: "I am holding", past: "I held", future: "I will hold",
               examplePresent: "I hold the baby.", exampleProgressive: "I am holding it.", examplePast: "I held the door.", exampleFuture: "I will hold on." },
-            { verb: "break", emoji: "💔", present: "I break", progressive: "I am breaking", past: "I broke", future: "I will break",
+            { verb: "break", emoji: "💔", spanish: "romper", present: "I break", progressive: "I am breaking", past: "I broke", future: "I will break",
               examplePresent: "I break eggs.", exampleProgressive: "I am breaking it.", examplePast: "I broke the glass.", exampleFuture: "I will break it." },
-            { verb: "fix", emoji: "🔧", present: "I fix", progressive: "I am fixing", past: "I fixed", future: "I will fix",
+            { verb: "fix", emoji: "🔧", spanish: "arreglar", present: "I fix", progressive: "I am fixing", past: "I fixed", future: "I will fix",
               examplePresent: "I fix cars.", exampleProgressive: "I am fixing it.", examplePast: "I fixed the problem.", exampleFuture: "I will fix it." },
-            { verb: "build", emoji: "🏗️", present: "I build", progressive: "I am building", past: "I built", future: "I will build",
+            { verb: "build", emoji: "🏗️", spanish: "construir", present: "I build", progressive: "I am building", past: "I built", future: "I will build",
               examplePresent: "I build houses.", exampleProgressive: "I am building a tower.", examplePast: "I built a bridge.", exampleFuture: "I will build it." },
-            { verb: "cut", emoji: "✂️", present: "I cut", progressive: "I am cutting", past: "I cut", future: "I will cut",
+            { verb: "cut", emoji: "✂️", spanish: "cortar", present: "I cut", progressive: "I am cutting", past: "I cut", future: "I will cut",
               examplePresent: "I cut paper.", exampleProgressive: "I am cutting vegetables.", examplePast: "I cut my hair.", exampleFuture: "I will cut it." },
-            { verb: "draw", emoji: "✏️", present: "I draw", progressive: "I am drawing", past: "I drew", future: "I will draw",
+            { verb: "draw", emoji: "✏️", spanish: "dibujar", present: "I draw", progressive: "I am drawing", past: "I drew", future: "I will draw",
               examplePresent: "I draw pictures.", exampleProgressive: "I am drawing now.", examplePast: "I drew a cat.", exampleFuture: "I will draw later." },
-            { verb: "paint", emoji: "🎨", present: "I paint", progressive: "I am painting", past: "I painted", future: "I will paint",
+            { verb: "paint", emoji: "🎨", spanish: "pintar", present: "I paint", progressive: "I am painting", past: "I painted", future: "I will paint",
               examplePresent: "I paint on weekends.", exampleProgressive: "I am painting the wall.", examplePast: "I painted yesterday.", exampleFuture: "I will paint tomorrow." },
-            { verb: "visit", emoji: "🏠", present: "I visit", progressive: "I am visiting", past: "I visited", future: "I will visit",
+            { verb: "visit", emoji: "🏠", spanish: "visitar", present: "I visit", progressive: "I am visiting", past: "I visited", future: "I will visit",
               examplePresent: "I visit my grandparents.", exampleProgressive: "I am visiting friends.", examplePast: "I visited New York.", exampleFuture: "I will visit you soon." },
-            { verb: "travel", emoji: "✈️", present: "I travel", progressive: "I am traveling", past: "I traveled", future: "I will travel",
+            { verb: "travel", emoji: "✈️", spanish: "viajar", present: "I travel", progressive: "I am traveling", past: "I traveled", future: "I will travel",
               examplePresent: "I travel every summer.", exampleProgressive: "I am traveling to Spain.", examplePast: "I traveled to Paris.", exampleFuture: "I will travel next year." },
-            { verb: "arrive", emoji: "🏁", present: "I arrive", progressive: "I am arriving", past: "I arrived", future: "I will arrive",
+            { verb: "arrive", emoji: "🏁", spanish: "llegar", present: "I arrive", progressive: "I am arriving", past: "I arrived", future: "I will arrive",
               examplePresent: "I arrive at 9 AM.", exampleProgressive: "I am arriving soon.", examplePast: "I arrived late.", exampleFuture: "I will arrive early." },
-            { verb: "leave", emoji: "🚪", present: "I leave", progressive: "I am leaving", past: "I left", future: "I will leave",
+            { verb: "leave", emoji: "🚪", spanish: "salir", present: "I leave", progressive: "I am leaving", past: "I left", future: "I will leave",
               examplePresent: "I leave at 5 PM.", exampleProgressive: "I am leaving now.", examplePast: "I left early.", exampleFuture: "I will leave tomorrow." },
-            { verb: "return", emoji: "↩️", present: "I return", progressive: "I am returning", past: "I returned", future: "I will return",
+            { verb: "return", emoji: "↩️", spanish: "regresar", present: "I return", progressive: "I am returning", past: "I returned", future: "I will return",
               examplePresent: "I return home daily.", exampleProgressive: "I am returning it.", examplePast: "I returned yesterday.", exampleFuture: "I will return soon." },
-            { verb: "change", emoji: "🔄", present: "I change", progressive: "I am changing", past: "I changed", future: "I will change",
+            { verb: "change", emoji: "🔄", spanish: "cambiar", present: "I change", progressive: "I am changing", past: "I changed", future: "I will change",
               examplePresent: "I change clothes.", exampleProgressive: "I am changing it.", examplePast: "I changed my mind.", exampleFuture: "I will change it." },
-            { verb: "turn", emoji: "↪️", present: "I turn", progressive: "I am turning", past: "I turned", future: "I will turn",
+            { verb: "turn", emoji: "↪️", spanish: "girar", present: "I turn", progressive: "I am turning", past: "I turned", future: "I will turn",
               examplePresent: "I turn left here.", exampleProgressive: "I am turning around.", examplePast: "I turned the page.", exampleFuture: "I will turn right." },
-            { verb: "move", emoji: "📦", present: "I move", progressive: "I am moving", past: "I moved", future: "I will move",
+            { verb: "move", emoji: "📦", spanish: "mover", present: "I move", progressive: "I am moving", past: "I moved", future: "I will move",
               examplePresent: "I move boxes.", exampleProgressive: "I am moving it.", examplePast: "I moved the table.", exampleFuture: "I will move tomorrow." },
-            { verb: "stay", emoji: "🏠", present: "I stay", progressive: "I am staying", past: "I stayed", future: "I will stay",
+            { verb: "stay", emoji: "🏠", spanish: "quedarse", present: "I stay", progressive: "I am staying", past: "I stayed", future: "I will stay",
               examplePresent: "I stay home on Sundays.", exampleProgressive: "I am staying here.", examplePast: "I stayed late.", exampleFuture: "I will stay longer." },
-            { verb: "live", emoji: "🏡", present: "I live", progressive: "I am living", past: "I lived", future: "I will live",
+            { verb: "live", emoji: "🏡", spanish: "vivir", present: "I live", progressive: "I am living", past: "I lived", future: "I will live",
               examplePresent: "I live in California.", exampleProgressive: "I am living here.", examplePast: "I lived in Texas.", exampleFuture: "I will live there." },
-            { verb: "die", emoji: "💀", present: "I die", progressive: "I am dying", past: "I died", future: "I will die",
+            { verb: "die", emoji: "💀", spanish: "morir", present: "I die", progressive: "I am dying", past: "I died", future: "I will die",
               examplePresent: "I die eventually.", exampleProgressive: "I am dying of laughter.", examplePast: "I died in the game.", exampleFuture: "I will die someday." },
-            { verb: "grow", emoji: "🌱", present: "I grow", progressive: "I am growing", past: "I grew", future: "I will grow",
+            { verb: "grow", emoji: "🌱", spanish: "crecer", present: "I grow", progressive: "I am growing", past: "I grew", future: "I will grow",
               examplePresent: "I grow plants.", exampleProgressive: "I am growing taller.", examplePast: "I grew up here.", exampleFuture: "I will grow stronger." },
-            { verb: "become", emoji: "✨", present: "I become", progressive: "I am becoming", past: "I became", future: "I will become",
-              examplePresent: "I become better.", exampleProgressive: "I am becoming stronger.", examplePast: "I became a teacher.", exampleFuture: "I will become successful." },
-            { verb: "happen", emoji: "❓", present: "I happen", progressive: "I am happening", past: "I happened", future: "I will happen",
-              examplePresent: "I happen to be here.", exampleProgressive: "I am happening now.", examplePast: "I happened to see it.", exampleFuture: "I will happen to know." },
-            { verb: "seem", emoji: "🤔", present: "I seem", progressive: "I am seeming", past: "I seemed", future: "I will seem",
+            { verb: "seem", emoji: "🤔", spanish: "parecer", present: "I seem", progressive: "I am seeming", past: "I seemed", future: "I will seem",
               examplePresent: "I seem happy.", exampleProgressive: "I am seeming tired.", examplePast: "I seemed confused.", exampleFuture: "I will seem different." },
-            { verb: "appear", emoji: "👀", present: "I appear", progressive: "I am appearing", past: "I appeared", future: "I will appear",
+            { verb: "appear", emoji: "👀", spanish: "aparecer", present: "I appear", progressive: "I am appearing", past: "I appeared", future: "I will appear",
               examplePresent: "I appear calm.", exampleProgressive: "I am appearing on TV.", examplePast: "I appeared nervous.", exampleFuture: "I will appear confident." },
-            { verb: "continue", emoji: "▶️", present: "I continue", progressive: "I am continuing", past: "I continued", future: "I will continue",
+            { verb: "continue", emoji: "▶️", spanish: "continuar", present: "I continue", progressive: "I am continuing", past: "I continued", future: "I will continue",
               examplePresent: "I continue working.", exampleProgressive: "I am continuing now.", examplePast: "I continued yesterday.", exampleFuture: "I will continue tomorrow." },
-            { verb: "follow", emoji: "👣", present: "I follow", progressive: "I am following", past: "I followed", future: "I will follow",
+            { verb: "follow", emoji: "👣", spanish: "seguir", present: "I follow", progressive: "I am following", past: "I followed", future: "I will follow",
               examplePresent: "I follow the rules.", exampleProgressive: "I am following you.", examplePast: "I followed her.", exampleFuture: "I will follow the plan." },
-            { verb: "meet", emoji: "🤝", present: "I meet", progressive: "I am meeting", past: "I met", future: "I will meet",
+            { verb: "meet", emoji: "🤝", spanish: "conocer", present: "I meet", progressive: "I am meeting", past: "I met", future: "I will meet",
               examplePresent: "I meet new people.", exampleProgressive: "I am meeting friends.", examplePast: "I met her yesterday.", exampleFuture: "I will meet you tomorrow." },
-            { verb: "send", emoji: "📤", present: "I send", progressive: "I am sending", past: "I sent", future: "I will send",
+            { verb: "send", emoji: "📤", spanish: "enviar", present: "I send", progressive: "I am sending", past: "I sent", future: "I will send",
               examplePresent: "I send emails daily.", exampleProgressive: "I am sending a message.", examplePast: "I sent it yesterday.", exampleFuture: "I will send it tomorrow." },
-            { verb: "receive", emoji: "📥", present: "I receive", progressive: "I am receiving", past: "I received", future: "I will receive",
+            { verb: "receive", emoji: "📥", spanish: "recibir", present: "I receive", progressive: "I am receiving", past: "I received", future: "I will receive",
               examplePresent: "I receive packages.", exampleProgressive: "I am receiving a gift.", examplePast: "I received a letter.", exampleFuture: "I will receive it soon." },
-            { verb: "choose", emoji: "🤔", present: "I choose", progressive: "I am choosing", past: "I chose", future: "I will choose",
-              examplePresent: "I choose wisely.", exampleProgressive: "I am choosing now.", examplePast: "I chose the blue one.", exampleFuture: "I will choose carefully." }
+            { verb: "choose", emoji: "🤔", spanish: "elegir", present: "I choose", progressive: "I am choosing", past: "I chose", future: "I will choose",
+              examplePresent: "I choose wisely.", exampleProgressive: "I am choosing now.", examplePast: "I chose the blue one.", exampleFuture: "I will choose carefully." },
+            { verb: "smile", emoji: "😊", spanish: "sonreír", present: "I smile", progressive: "I am smiling", past: "I smiled", future: "I will smile",
+              examplePresent: "I smile every day.", exampleProgressive: "I am smiling now.", examplePast: "I smiled at her.", exampleFuture: "I will smile for the photo." },
+            { verb: "laugh", emoji: "😂", spanish: "reír", present: "I laugh", progressive: "I am laughing", past: "I laughed", future: "I will laugh",
+              examplePresent: "I laugh at jokes.", exampleProgressive: "I am laughing now.", examplePast: "I laughed so hard.", exampleFuture: "I will laugh at that." },
+            { verb: "cry", emoji: "😢", spanish: "llorar", present: "I cry", progressive: "I am crying", past: "I cried", future: "I will cry",
+              examplePresent: "I cry sometimes.", exampleProgressive: "I am crying now.", examplePast: "I cried yesterday.", exampleFuture: "I will cry if I'm sad." },
+            { verb: "type", emoji: "⌨️", spanish: "escribir", present: "I type", progressive: "I am typing", past: "I typed", future: "I will type",
+              examplePresent: "I type fast.", exampleProgressive: "I am typing an email.", examplePast: "I typed the report.", exampleFuture: "I will type it later." },
+            { verb: "wear", emoji: "👔", spanish: "usar", present: "I wear", progressive: "I am wearing", past: "I wore", future: "I will wear",
+              examplePresent: "I wear glasses.", exampleProgressive: "I am wearing a coat.", examplePast: "I wore a suit.", exampleFuture: "I will wear jeans." },
+            { verb: "rent", emoji: "🏠", spanish: "alquilar", present: "I rent", progressive: "I am renting", past: "I rented", future: "I will rent",
+              examplePresent: "I rent an apartment.", exampleProgressive: "I am renting a car.", examplePast: "I rented a movie.", exampleFuture: "I will rent a house." }
         ];
         
         let currentIndex = 0;
@@ -632,6 +709,7 @@
             }
             
             document.getElementById('verbTitle').textContent = verb.verb.toUpperCase();
+            document.getElementById('verbSpanish').textContent = verb.spanish || '';
             document.getElementById('simplePresent').textContent = verb.present;
             document.getElementById('presentProgressive').textContent = verb.progressive;
             document.getElementById('simplePast').textContent = verb.past;
@@ -649,6 +727,12 @@
             } else {
                 progressiveSection.style.display = 'block';
             }
+            
+            // Show recording controls ONLY for "to be" and "to have"
+            const showRecording = (verb.verb === 'to be' || verb.verb === 'to have');
+            document.getElementById('recordControlsPresent').style.display = showRecording ? 'flex' : 'none';
+            document.getElementById('recordControlsPast').style.display = showRecording ? 'flex' : 'none';
+            document.getElementById('recordControlsFuture').style.display = showRecording ? 'flex' : 'none';
         }
         
         function nextVerb() {
@@ -701,6 +785,65 @@
         window.onload = () => {
             displayVerb(0);
         };
+        
+        // Recording functionality
+        let mediaRecorder = null;
+        let audioChunks = {};
+        let recordings = {};
+        
+        async function toggleRecording(tense) {
+            const recordBtn = document.getElementById(`recordBtn${tense}`);
+            const playBtn = document.getElementById(`playBtn${tense}`);
+            const status = document.getElementById(`status${tense}`);
+            
+            if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+                // Start recording
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks[tense] = [];
+                    
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks[tense].push(event.data);
+                    };
+                    
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks[tense], { type: 'audio/wav' });
+                        recordings[tense] = URL.createObjectURL(audioBlob);
+                        playBtn.disabled = false;
+                        status.textContent = 'Recording saved!';
+                        setTimeout(() => status.textContent = '', 2000);
+                    };
+                    
+                    mediaRecorder.start();
+                    recordBtn.textContent = '⏹️ Stop';
+                    recordBtn.classList.add('recording');
+                    status.textContent = 'Recording...';
+                    
+                } catch (err) {
+                    status.textContent = 'Microphone access denied';
+                    console.error('Error accessing microphone:', err);
+                }
+            } else {
+                // Stop recording
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                recordBtn.textContent = '🎤 Record';
+                recordBtn.classList.remove('recording');
+            }
+        }
+        
+        function playRecording(tense) {
+            if (recordings[tense]) {
+                const audio = new Audio(recordings[tense]);
+                audio.play();
+                const status = document.getElementById(`status${tense}`);
+                status.textContent = 'Playing...';
+                audio.onended = () => {
+                    status.textContent = '';
+                };
+            }
+        }
     </script>
 </body>
 </html>
