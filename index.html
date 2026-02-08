@@ -912,11 +912,14 @@
                     };
                     
                     mediaRecorder.onstop = () => {
-                        const audioBlob = new Blob(audioChunks[tense], { type: 'audio/wav' });
+                        const audioBlob = new Blob(audioChunks[tense], { type: 'audio/webm' });
                         recordings[tense] = URL.createObjectURL(audioBlob);
                         playBtn.disabled = false;
                         status.textContent = 'Recording saved!';
                         setTimeout(() => status.textContent = '', 2000);
+                        
+                        // Clean up the stream
+                        mediaRecorder.stream.getTracks().forEach(track => track.stop());
                     };
                     
                     mediaRecorder.start();
@@ -940,9 +943,16 @@
         function playRecording(tense) {
             if (recordings[tense]) {
                 const audio = new Audio(recordings[tense]);
-                audio.play();
+                audio.volume = 1.0; // Full volume
                 const status = document.getElementById(`status${tense}`);
                 status.textContent = 'Playing...';
+                
+                audio.play().catch(err => {
+                    console.error('Playback error:', err);
+                    status.textContent = 'Playback error';
+                    setTimeout(() => status.textContent = '', 2000);
+                });
+                
                 audio.onended = () => {
                     status.textContent = '';
                 };
