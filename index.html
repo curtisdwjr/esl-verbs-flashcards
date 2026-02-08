@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💬 English Verbs • Study Cards</title>
+    <title>💬 English Verbs</title>
     
     <style>
         * {
@@ -377,7 +377,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>English Verbs • Study Cards</h1>
+            <h1>English Verbs</h1>
             <p class="progress" id="progress">Verb 1 of 102</p>
         </div>
         
@@ -462,9 +462,9 @@
               progressive: "", 
               past: "", 
               future: "", 
-              examplePresent: "Welcome to English Verbs • Study Cards! This app will help you learn 102 essential English verbs with examples in 4 tenses. Click 'Next' to begin learning!",
+              examplePresent: "Welcome! This app will help you learn 102 essential English verbs with examples in 4 tenses. Click 'Next' to begin learning!",
               exampleProgressive: "",
-              examplePast: "¡Bienvenido a las Tarjetas de Estudio de Verbos en Inglés! Esta aplicación te ayudará a aprender 102 verbos esenciales en inglés con ejemplos en 4 tiempos. ¡Haz clic en 'Siguiente' para comenzar a aprender!",
+              examplePast: "¡Bienvenido! Esta aplicación te ayudará a aprender 102 verbos esenciales en inglés con ejemplos en 4 tiempos. ¡Haz clic en 'Siguiente' para comenzar a aprender!",
               exampleFuture: ""
             },
             { verb: "to be", emoji: "", spanish: "ser/estar", present: "I am", progressive: "", past: "I was", future: "I will be", 
@@ -739,7 +739,7 @@
                 if (!introSection) {
                     introSection = document.createElement('div');
                     introSection.id = 'introSection';
-                    introSection.style.cssText = 'background: white; border-radius: 12px; padding: 20px; margin-top: 20px;';
+                    introSection.style.cssText = 'background: white; border-radius: 12px; padding: 20px; margin-top: 0px;';
                     flashcard.appendChild(introSection);
                 }
                 
@@ -747,7 +747,7 @@
                 const progressDiv = document.getElementById('progress');
                 const iAmSmilingDiv = document.createElement('div');
                 iAmSmilingDiv.id = 'iAmSmilingDiv';
-                iAmSmilingDiv.style.cssText = 'text-align: center; margin-top: 15px; margin-bottom: 20px;';
+                iAmSmilingDiv.style.cssText = 'text-align: center; margin-top: 15px; margin-bottom: 10px;';
                 iAmSmilingDiv.innerHTML = `
                     <div style="font-size: 1.3rem; color: #333; font-weight: 500; text-align: center;">
                         I am smiling
@@ -756,7 +756,7 @@
                 progressDiv.parentNode.insertBefore(iAmSmilingDiv, progressDiv.nextSibling);
                 
                 introSection.innerHTML = `
-                    <div style="margin-bottom: 20px; margin-top: 20px;">
+                    <div style="margin-bottom: 20px; margin-top: 0px;">
                         <div style="font-size: 1.1rem; color: #333; line-height: 1.8; margin-bottom: 15px;">
                             ${verb.examplePresent}
                         </div>
@@ -768,7 +768,7 @@
                         <div style="font-size: 0.95rem; color: #666; margin-bottom: 10px; font-weight: 600;">Features:</div>
                         <div style="font-size: 0.9rem; color: #555; line-height: 1.8; text-align: left;">
                             🎯 102 essential verbs<br>
-                            🇪🇸 Spanish translations<br>
+                            🇲🇽 Spanish translations<br>
                             🔊 Audio pronunciation<br>
                             📖 Sample sentences<br>
                             📱 Mobile friendly
