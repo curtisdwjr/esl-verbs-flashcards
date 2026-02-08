@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💬 English Verb Study Cards</title>
+    <title>💬 English Verbs • Study Cards</title>
     
     <style>
         * {
@@ -262,7 +262,7 @@
         
         .verb-list-btn {
             width: 100%;
-            background: #48bb78;
+            background: #4a5568;
             color: white;
             margin-bottom: 10px;
         }
@@ -377,7 +377,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Verb Study Cards</h1>
+            <h1>English Verbs • Study Cards</h1>
             <p class="progress" id="progress">Verb 1 of 102</p>
         </div>
         
@@ -462,9 +462,9 @@
               progressive: "", 
               past: "", 
               future: "", 
-              examplePresent: "Welcome to English Verb Study Cards! This app will help you learn 102 essential English verbs with examples in all tenses. Click 'Next' to begin learning!",
+              examplePresent: "Welcome to English Verbs • Study Cards! This app will help you learn 102 essential English verbs with examples in 4 tenses. Click 'Next' to begin learning!",
               exampleProgressive: "",
-              examplePast: "¡Bienvenido a las Tarjetas de Estudio de Verbos en Inglés! Esta aplicación te ayudará a aprender 102 verbos esenciales en inglés con ejemplos en todos los tiempos. ¡Haz clic en 'Siguiente' para comenzar a aprender!",
+              examplePast: "¡Bienvenido a las Tarjetas de Estudio de Verbos en Inglés! Esta aplicación te ayudará a aprender 102 verbos esenciales en inglés con ejemplos en 4 tiempos. ¡Haz clic en 'Siguiente' para comenzar a aprender!",
               exampleFuture: ""
             },
             { verb: "to be", emoji: "", spanish: "ser/estar", present: "I am", progressive: "", past: "I was", future: "I will be", 
@@ -716,14 +716,16 @@
             
             // Handle intro card
             if (verb.isIntro) {
-                // Show emoji and title on intro card
+                // Hide emoji and title on intro card
                 const emojiElement = document.getElementById('verbEmoji');
-                emojiElement.textContent = '📚🔊';
-                emojiElement.style.display = 'block';
-                emojiElement.style.fontSize = '3rem';
+                emojiElement.style.display = 'none';
                 
-                document.getElementById('verbTitle').textContent = 'English Verb Study Cards';
+                document.getElementById('verbTitle').textContent = '';
                 document.getElementById('verbSpanish').textContent = '';
+                
+                // Hide speaker button on intro page
+                const speakerBtn = document.querySelector('.speaker-btn');
+                if (speakerBtn) speakerBtn.style.display = 'none';
                 
                 // Hide all tense sections
                 document.querySelectorAll('.tense-section').forEach(section => {
@@ -741,8 +743,20 @@
                     flashcard.appendChild(introSection);
                 }
                 
+                // Add "I am smiling" right after the image
+                const progressDiv = document.getElementById('progress');
+                const iAmSmilingDiv = document.createElement('div');
+                iAmSmilingDiv.id = 'iAmSmilingDiv';
+                iAmSmilingDiv.style.cssText = 'text-align: center; margin-top: 15px; margin-bottom: 20px;';
+                iAmSmilingDiv.innerHTML = `
+                    <div style="font-size: 1.3rem; color: #333; font-weight: 500; text-align: center;">
+                        I am smiling
+                    </div>
+                `;
+                progressDiv.parentNode.insertBefore(iAmSmilingDiv, progressDiv.nextSibling);
+                
                 introSection.innerHTML = `
-                    <div style="margin-bottom: 20px;">
+                    <div style="margin-bottom: 20px; margin-top: 20px;">
                         <div style="font-size: 1.1rem; color: #333; line-height: 1.8; margin-bottom: 15px;">
                             ${verb.examplePresent}
                         </div>
@@ -777,6 +791,12 @@
             const introSection = document.getElementById('introSection');
             if (introSection) {
                 introSection.style.display = 'none';
+            }
+            
+            // Hide "I am smiling" div if it exists
+            const iAmSmilingDiv = document.getElementById('iAmSmilingDiv');
+            if (iAmSmilingDiv) {
+                iAmSmilingDiv.style.display = 'none';
             }
             
             // Show speaker button
